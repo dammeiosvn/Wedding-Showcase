@@ -1,0 +1,24 @@
+{
+  "title": "Wedding Showcase",
+  "hero": {
+    "eyebrow": "OUR LOVE STORY",
+    "title": "Một đời. Một người.",
+    "subtitle": "Và một tình yêu không có ngày kết thúc.",
+    "cover": ""
+  },
+  "intro": {
+    "title": "Những nơi đã đi qua.\nMột người luôn ở lại.",
+    "text": "Mỗi khung hình là một lời hẹn. Mỗi chương là một cách chúng mình kể lại tình yêu."
+  },
+  "footer": { "title": "Câu chuyện còn tiếp.", "message": "Cùng nhau, qua từng mùa thương nhớ." },
+  "chapterOrder": ["vietnam", "khmer", "indonesia", "dalat"],
+  "chapters": {
+    "vietnam": { "title": "Việt Nam", "description": "Nơi tình yêu mang dáng hình thân thuộc." },
+    "khmer": { "title": "Khmer", "description": "Lời hẹn ước trong sắc vàng truyền thống." },
+    "indonesia": { "title": "Indonesia", "description": "Một hành trình, những sắc màu mới." },
+    "dalat": { "title": "Đà Lạt", "description": "Có nhau giữa một miền dịu dàng." }
+  },
+  "photos": {},
+  "audio": { "src": "audio/wedding.mp3", "loop": true },
+  "gallery": { "pageSize": 24 }
+}

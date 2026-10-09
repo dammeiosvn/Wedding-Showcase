@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F8F7F4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="__ALBUM_TITLE__">
+  <meta name="description" content="Một câu chuyện tình yêu được kể qua từng khung hình.">
+  <meta name="app-version" content="__BUILD_VERSION__">
+  <title>__ALBUM_TITLE__</title>
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./css/style.css?v=__BUILD_VERSION__">
+  <script type="module" src="./js/app.js?v=__BUILD_VERSION__"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung</a>
+  <header class="site-header">
+    <a class="wordmark" href="#" aria-label="Về đầu câu chuyện">WEDDING<span>SHOWCASE</span></a>
+    <div class="header-actions">
+      <a class="gallery-link" href="#gallery" hidden>Bộ ảnh <span aria-hidden="true">↗</span></a>
+      <button id="music" class="icon-button" type="button" aria-label="Bật nhạc nền" aria-pressed="false" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 18V5l11-2v13M9 8l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2.5"/><ellipse cx="17" cy="16" rx="3" ry="2.5"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main">
+    <section id="hero" class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow" id="hero-eyebrow">OUR LOVE STORY</p>
+        <h1 id="hero-title">Một đời.<br>Một người.</h1>
+        <p id="hero-subtitle" class="hero-subtitle">Và một tình yêu không có ngày kết thúc.</p>
+      </div>
+      <div id="hero-media" class="hero-media" hidden></div>
+      <div id="initial-status" class="initial-status" role="status"><span class="loading-dot" aria-hidden="true"></span> Đang mở câu chuyện…</div>
+      <a id="scroll-cue" class="scroll-cue" href="#story" hidden>Khám phá câu chuyện <span aria-hidden="true">↓</span></a>
+    </section>
+    <section id="empty" class="empty-state" hidden aria-labelledby="empty-title">
+      <div class="rings" aria-hidden="true"><i></i><i></i></div>
+      <p class="eyebrow">NHỮNG KHOẢNH KHẮC ĐANG ĐỢI</p>
+      <h2 id="empty-title">Một câu chuyện đẹp.<br>Chờ những khung hình đầu tiên.</h2>
+      <p>Khi những bức ảnh đầu tiên được thêm vào, câu chuyện của chúng mình sẽ bắt đầu từ đây.</p>
+    </section>
+    <section id="load-error" class="empty-state" hidden aria-labelledby="error-title">
+      <p class="eyebrow">TẠM DỪNG MỘT NHỊP</p>
+      <h2 id="error-title">Chưa mở được bộ ảnh.</h2>
+      <p>Hãy kiểm tra kết nối rồi thử lại. Câu chuyện vẫn đang đợi ở đây.</p>
+      <button id="retry" class="text-button" type="button">Thử lại <span aria-hidden="true">↗</span></button>
+    </section>
+    <section id="story" class="story" hidden aria-labelledby="story-title">
+      <div class="intro reveal"><p class="eyebrow">THE CHAPTERS</p><h2 id="story-title"></h2><p id="story-description"></p></div>
+      <div id="chapters"></div>
+      <button id="more-chapters" class="text-button centered" type="button" hidden>Đọc tiếp câu chuyện <span aria-hidden="true">↓</span></button>
+    </section>
+    <section id="gallery" class="gallery" hidden aria-labelledby="gallery-title">
+      <div class="gallery-heading reveal"><div><p class="eyebrow">THE COLLECTION</p><h2 id="gallery-title">Từng khoảnh khắc.<br>Trọn một tình yêu.</h2></div><p id="gallery-count" aria-live="polite"></p></div>
+      <div id="gallery-filters" class="gallery-filters" role="group" aria-label="Chọn chương ảnh"></div>
+      <div id="gallery-grid" class="gallery-grid"></div>
+      <button id="more-photos" class="text-button centered" type="button" hidden>Xem thêm ảnh <span aria-hidden="true">↓</span></button>
+      <p id="gallery-progress" class="gallery-progress" role="status"></p>
+    </section>
+  </main>
+  <footer class="site-footer"><p class="eyebrow" id="footer-album">WEDDING SHOWCASE</p><h2 id="footer-title">Câu chuyện còn tiếp.</h2><p id="footer-message">Cùng nhau, qua từng mùa thương nhớ.</p><div class="footer-line" aria-hidden="true"></div><p class="footer-note">WITH LOVE, ALWAYS.</p></footer>
+  <div id="update-notice" class="update-notice" hidden role="status"><p>Câu chuyện có phiên bản mới.</p><button id="apply-update" type="button">Cập nhật</button><button id="dismiss-update" class="notice-close" type="button" aria-label="Để sau">×</button></div>
+  <p id="announcement" class="sr-only" aria-live="polite"></p>
+  <dialog id="lightbox" class="lightbox" aria-label="Trình xem ảnh cưới">
+    <div class="lightbox-toolbar"><span id="lightbox-count" aria-live="polite"></span><button id="lightbox-close" class="icon-button" type="button" aria-label="Đóng trình xem ảnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <div id="lightbox-stage" class="lightbox-stage"><img id="lightbox-image" alt="" draggable="false"><p id="lightbox-status" class="lightbox-status" role="status"></p></div>
+    <button id="lightbox-prev" class="lightbox-nav previous icon-button" type="button" aria-label="Ảnh trước">‹</button><button id="lightbox-next" class="lightbox-nav next icon-button" type="button" aria-label="Ảnh tiếp">›</button>
+    <div class="lightbox-bottom"><p id="lightbox-caption"></p><button id="lightbox-zoom" class="zoom-button" type="button" aria-label="Phóng to ảnh">Phóng to</button></div>
+  </dialog>
+  <noscript><p class="noscript">Vui lòng bật JavaScript để mở bộ ảnh.</p></noscript>
+</body>
+</html>

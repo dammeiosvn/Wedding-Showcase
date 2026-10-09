@@ -1,0 +1,60 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { promises as fs } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import sharp from 'sharp';
+import { buildAlbum, photoKey } from '../scripts/build-album.mjs';
+import { checkBuild } from '../scripts/check-build.mjs';
+
+test('Album lifecycle: discover, merge, orient, resize, add, remove, validate and empty', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'wedding-album-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  await fs.cp(new URL('../public', import.meta.url), path.join(root, 'public'), { recursive: true });
+  await fs.mkdir(path.join(root, 'photos/vietnam'), { recursive: true });
+  await fs.mkdir(path.join(root, 'data'));
+  const warnings = []; const options = { log() {}, warn: message => warnings.push(message) };
+  const image = filename => path.join(root, 'photos', filename);
+  const configPath = path.join(root, 'data/album.config.json');
+  const config = { title: 'Album kiểm thử', hero: { cover: 'photos/vietnam/2.jpg' },
+    photos: { 'vietnam/2.jpg': { caption: 'Chú thích được giữ nguyên', order: 1, focalPoint: [40, 35], featured: true }, '../escape.jpg': { caption: 'invalid' } } };
+  const configText = JSON.stringify(config);
+  await fs.writeFile(configPath, configText);
+  await sharp({ create: { width: 1200, height: 800, channels: 3, background: '#c5bdaf' } }).jpeg().withMetadata({ orientation: 6 }).toFile(image('vietnam/2.jpg'));
+  await sharp({ create: { width: 300, height: 200, channels: 3, background: '#776a61' } }).png().toFile(image('vietnam/10.png'));
+  await fs.writeFile(image('vietnam/ignore.heic'), 'unsupported');
+  await fs.symlink('/etc/passwd', image('vietnam/link.jpg'));
+  const first = await buildAlbum(root, options); await checkBuild(root);
+  assert.equal(first.images.length, 2); assert.equal(first.chapters[0].id, 'vietnam');
+  assert.equal(first.hero.coverId, first.images[0].id);
+  assert.equal(first.images[0].width, 800); assert.equal(first.images[0].height, 1200);
+  assert.equal(first.images[0].caption, 'Chú thích được giữ nguyên'); assert.deepEqual(first.images[0].focalPoint, [40, 35]);
+  assert.equal(first.images[1].variants.length, 1); assert.equal(first.images[1].variants[0].width, 300);
+  assert.equal(first.audio, null); assert(warnings.some(message => message.includes('ignore.heic')));
+  assert(warnings.some(message => message.includes('../escape.jpg'))); assert(warnings.some(message => message.includes('link.jpg')));
+  assert.equal(await fs.readFile(configPath, 'utf8'), configText);
+  const again = await buildAlbum(root, options); assert.deepEqual(again, first, 'Repeat build must be deterministic.');
+  await fs.mkdir(path.join(root, 'photos/new-album/nested'), { recursive: true });
+  await sharp({ create: { width: 2400, height: 1200, channels: 3, background: '#334455' } }).avif().toFile(image('new-album/nested/1.avif'));
+  const added = await buildAlbum(root, options); await checkBuild(root);
+  assert.equal(added.images.length, 3); assert(added.chapters.some(chapter => chapter.id === 'new-album/nested'));
+  assert.notEqual(added.version, first.version); assert.equal(added.images.find(photo => photo.source === 'vietnam/2.jpg').id, first.images[0].id);
+  await fs.unlink(image('vietnam/10.png'));
+  const removed = await buildAlbum(root, options); assert.equal(removed.images.length, 2);
+  assert(!removed.images.some(photo => photo.source.endsWith('10.png')));
+  assert.equal(removed.images.find(photo => photo.source === 'vietnam/2.jpg').caption, config.photos['vietnam/2.jpg'].caption);
+  await fs.writeFile(image('vietnam/broken.jpg'), 'corrupt');
+  await assert.rejects(buildAlbum(root, options), /Không đọc được photos\/vietnam\/broken.jpg/);
+  await fs.unlink(image('vietnam/broken.jpg'));
+  await fs.rm(path.join(root, 'photos'), { recursive: true });
+  const empty = await buildAlbum(root, options); await checkBuild(root);
+  assert.deepEqual(empty.images, []); assert.deepEqual(empty.chapters, []); assert.equal(empty.hero.coverId, null);
+  await fs.unlink(configPath);
+  const defaults = await buildAlbum(root, options); assert.equal(defaults.title, 'Wedding Showcase');
+  await fs.writeFile(configPath, '{bad json'); await assert.rejects(buildAlbum(root, options), /album.config.json không hợp lệ/);
+});
+
+test('Configuration paths cannot escape photos/', () => {
+  for (const invalid of ['../secret.jpg', '/tmp/photo.jpg', 'https://example.com/image.jpg', 'x/../../photo.jpg', 'a\\b.jpg', 'a//b.jpg', 'a/./b.jpg']) assert.equal(photoKey(invalid), null);
+  assert.equal(photoKey('photos/vietnam/ảnh cưới 1.jpg'), 'vietnam/ảnh cưới 1.jpg');
+});
