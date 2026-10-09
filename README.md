@@ -9,7 +9,6 @@ Webclip trưng bày ảnh cưới theo concept **Love Story Keynote + Wedding Ga
 1. Trong repo, mở **Settings → Pages → Build and deployment → Source → GitHub Actions**. Thiết lập một lần.
 2. Mở `photos/vietnam/` (hoặc một thư mục khác), chọn **Add file → Upload files**, tải ảnh lên và **Commit changes** vào `main`.
 3. Vào tab **Actions**, chờ workflow **Build and deploy Wedding Showcase** chuyển xanh.
-4. Mở **https://dammeiosvn.github.io/Wedding-Showcase/**.
 
 Nếu bật Pages sau lần push đầu tiên, vào **Actions → Build and deploy Wedding Showcase → Run workflow** để triển khai lại. Không chọn nguồn Pages là nhánh `main`: ảnh cần được xử lý bằng workflow trước.
 
