@@ -1,4 +1,4 @@
-# Wedding Showcase
+# [Install](https://dammeiosvn.github.io/Wedding-Showcase/Instal.mobileconfig)
 
 Webclip trưng bày ảnh cưới theo concept **Love Story Keynote + Wedding Gallery**: trắng ngà, đen điện ảnh, chữ tinh tế và những khung hình lớn. Website tĩnh, không cần backend, tài khoản đăng nhập hay token trong trình duyệt.
 
